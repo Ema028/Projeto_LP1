@@ -1,11 +1,16 @@
 #include "input.h"
 #include <stdio.h>
+#include <ctype.h>
 
 char* get_sized_string(char* text, char* string, int size)
 {
     printf("%s\n", text);
     //fgets ao inves de scanf para ser capaz de armazenar nomes completos com espaço entre nome e sobrenome
     fgets(string, size, stdin);
+    // Converte para minúsculo caractere por caractere
+    for (int i = 0; string[i] != '\0'; i++) {
+        string[i] = tolower((unsigned char)string[i]);
+    }
     return string;
 }
 
