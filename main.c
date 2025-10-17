@@ -57,6 +57,52 @@ typedef struct{
         Hortifruti hortifruti;
     };
 }RegistroDoMercado;
+
+void registrar(int *ID);
+void consultar(void);
+void deletar(void);
+void editar(void);
+
+int main()
+{
+    setlocale(LC_ALL,"portuguese"); 
+    int opcao;
+    int ID = 0;
+    while(true)
+    {
+        printf("Selecione um item do menu:\n\n");
+        printf("1-Registrar\n2-Consultar\n3-Deletar\n4-Editar\n5-Sair do sistema\n\n\n"); 
+        opcao = get_int("Qual funcao voce deseja acessar? ");
+        limpar_buffer();
+        switch(opcao) 
+        {
+            case 1:
+                registrar(&ID); 
+                break;
+
+            case 2:
+                consultar(); 
+                break;
+
+            case 3:
+                deletar(); 
+                break;
+
+            case 4:
+                editar();
+                break;
+
+            case 5:
+                printf("Saindo do sistema!\n");
+                return 0;
+
+            default:
+                printf("Opcao invalida!\n");
+        }
+    }
+    return 0;
+}
+
 void registrar(int *ID){
     FILE * f = fopen("arquivo.bin", "ab");
     if (f == NULL){
@@ -64,7 +110,7 @@ void registrar(int *ID){
         return;
     }
     RegistroDoMercado R;
-    R.id = (*ID)++;
+    R.id = *ID;
     get_sized_string("Nome: ", R.nome, 25);
     R.preco = get_float("Preco: ");
     limpar_buffer();
@@ -103,59 +149,84 @@ void registrar(int *ID){
         printf("Erro ao escrever no arquivo");
     }
     fclose(f);
-}
-void consultar(void);
-void deletar(void);
-void editar(void);
-
-int main()
-{
-    setlocale(LC_ALL,"portuguese"); 
-    int opcao;
-    int ID = 0;
-    while(true)
-    {
-        printf("Selecione um item do menu:\n\n");
-        printf("1-Registrar\n2-Consultar\n3-Deletar\n4-Editar\n5-Sair do sistema\n\n\n"); 
-        opcao = get_int("Qual função você deseja acessar? ");
-        limpar_buffer();
-        switch(opcao) 
-        {
-            case 1:
-                registrar(&ID); 
-                break;
-
-            case 2:
-                consultar(); 
-                break;
-
-            case 3:
-                deletar(); 
-                break;
-
-            case 4:
-                editar();
-                break;
-
-            case 5:
-                printf("Saindo do sistema!\n");
-                return 0;
-
-            default:
-                printf("Opção inválida!\n");
-        }
-    }
-    return 0;
+    (*ID)++;
 }
 
 void consultar(void)
 {
-    return;
+    int indice = get_int("Indice: ");
+    RegistroDoMercado RLido;
+    FILE * f = fopen("arquivo.bin", "rb");
+    long offset = (long)indice*sizeof(RegistroDoMercado);
+    if (fseek(f, offset, SEEK_SET) != 0) {
+        printf("Erro: Posicao fora dos limites do arquivo (fseek).\n");
+        fclose(f);
+        return;
+    }
+    if (fread(&RLido, sizeof(RegistroDoMercado), 1, f) == 1) {
+        printf("--- Registro %d Lido ---\n", indice + 1);
+        printf("ID: %d, Nome: %s, Preco: %f\n Quantidade: %d, Data de Validade: %s\n",
+             RLido.id, RLido.nome, RLido.preco, RLido.quantidade, RLido.datadevalidade);
+        switch (RLido.tag){
+            case (COMIDA):
+                printf("Marca da Comida: ", RLido.comida.marca);
+                printf("Tipo da Comida: ", RLido.comida.tipo);
+                printf("Categoria da Comida: ", RLido.comida.categoria);
+                break;
+            case (PAPELARIA):
+                printf("Marca da Papelaria: ", RLido.papelaria.marca);
+                printf("Tipo da Papelaria: ", RLido.papelaria.tipo);
+                printf("Detalhe da Papelaria: ", RLido.papelaria.detalhe);
+                break;
+            case (LIMPEZA):
+                printf("Marca do Produto de Limpeza: ", RLido.limpeza.marca);
+                printf("Forma do Produto de Limpeza: ", RLido.limpeza.forma);
+                break;
+            case (ACOUGUE):
+                printf("Origem do Produto do Açougue: ", RLido.acougue.origem);
+                printf("Corte do Produto do Açougue: ", RLido.acougue.corte);
+                break;
+            case (HORTIFRUTI):
+                printf("Classe do Produto do Hortifruti: ", RLido.hortifruti.classe);
+                printf("Variedade do Produto do Hortifruti: ", RLido.hortifruti.variedade);
+                break;
+            default:
+                printf("Você não digitou algo válido!\n");
+        }
+    } else {
+        printf("Erro: Nao foi possivel ler o registro na posicao %d (EOF).\n", indice);
+    }
 }
 
 void deletar(void)
 {
-    return;
+    int indice = get_int("Indice: ");
+    FILE * f = fopen("arquivo.bin", "rb");
+    if(f == NULL){
+        printf("Erro: Nao foi blabla bla");
+    }
+    FILE * temp = fopen("temp.bin", "ab");
+    if(temp == NULL){
+        printf("Erro: Nao foi blabla bla");
+    }
+    RegistroDoMercado R;
+    int encontrou = 0;
+    while(fread(&R,sizeof(RegistroDoMercado), 1, f) == 1){
+        if(R.id == indice){
+            encontrou = 1;
+        } else{
+            fwrite(&R, sizeof(RegistroDoMercado), 1, temp);
+        }
+    }
+    if(encontrou == 1){
+        remove("arquivo.bin");
+        rename("temp.bin", "arquivo.bin");
+        printf("REMOVEU PORRRRRRRRRRRAAAA");
+    }
+    else{
+        printf("nao removeu, mane");
+        remove("temp.bin");
+    }
 }
 
 void editar(void)
