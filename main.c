@@ -1,5 +1,6 @@
 #include "libs\input.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <locale.h> 
 
 #define true 1
@@ -57,6 +58,15 @@ void limpar_buffer() {
     }
 }
 
+void limpar_terminal() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+
 //Estoque do Mercado
 typedef enum{COMIDA, PAPELARIA, LIMPEZA, ACOUGUE, HORTIFRUTI}TipoDoProduto;
 
@@ -102,14 +112,77 @@ typedef struct{
         Hortifruti hortifruti;
     };
 }RegistroDoMercado;
+<<<<<<< Updated upstream
 void registrar(int *ID){
+=======
+
+void registrar(int ID);
+void consultar(int indice);
+void deletar(int indice);
+void editar(int indice);
+
+int main()
+{
+    setlocale(LC_ALL,"portuguese"); 
+    int opcao;
+    int ID = 0;
+    while(true)
+    {
+        limpar_terminal();
+        printf("Selecione um item do menu:\n\n");
+        printf("1-Registrar\n2-Consultar\n3-Deletar\n4-Editar\n5-Sair do sistema\n\n\n"); 
+        opcao = get_int("Qual funcao voce deseja acessar? ");
+        limpar_buffer();
+        int indice;
+        switch(opcao) 
+        {
+            case 1:
+                registrar(ID); 
+                ID++;
+                break;
+
+            case 2:
+                indice = get_int("Indice: ");
+                consultar(indice); 
+                break;
+
+            case 3:
+                indice = get_int("Indice: ");
+                deletar(indice); 
+                break;
+
+            case 4:
+                indice = get_int("Indice: ");
+                editar(indice);
+                break;
+
+            case 5:
+                printf("Saindo do sistema!\n");
+                return 0;
+
+            default:
+                printf("Opcao invalida!\n");
+        }
+        printf("Pressione ENTER para sair!");
+        limpar_buffer();
+        getchar();
+    }
+    return 0;
+}
+
+void registrar(int ID){
+>>>>>>> Stashed changes
     FILE * f = fopen("arquivo.bin", "ab");
     if (f == NULL){
-        printf("Erro ao abrir o arquivo");
+        printf("Erro: Falha ao abrir o arquivo\n");
         return;
     }
     RegistroDoMercado R;
+<<<<<<< Updated upstream
     R.id = (*ID)++;
+=======
+    R.id = ID;
+>>>>>>> Stashed changes
     get_sized_string("Nome: ", R.nome, 25);
     R.preco = get_float("Preco: ");
     limpar_buffer();
@@ -148,6 +221,7 @@ void registrar(int *ID){
         printf("Erro ao escrever no arquivo");
     }
     fclose(f);
+<<<<<<< Updated upstream
 }
 void consultar(void);
 void deletar(void);
@@ -191,19 +265,115 @@ int main()
         }
     }
     return 0;
+=======
+>>>>>>> Stashed changes
 }
 
-void consultar(void)
+void consultar(int indice)
 {
+<<<<<<< Updated upstream
     return;
+=======
+    RegistroDoMercado RLido;
+    FILE * f = fopen("arquivo.bin", "rb");
+    if (f == NULL){
+        printf("Erro: Falha ao abrir o arquivo\n");
+    }
+
+    long offset = (long)indice*sizeof(RegistroDoMercado);
+    if (fseek(f, offset, SEEK_SET) != 0) {
+        printf("Erro: Posicao fora dos limites do arquivo (fseek).\n");
+        fclose(f);
+        return;
+    }
+    if (fread(&RLido, sizeof(RegistroDoMercado), 1, f) == 1) {
+        printf("--- Registro %d Lido ---\n", RLido.id);
+        printf("ID: %d\nNome: %s\nPreco: %.2f\nQuantidade: %d\nData de Validade: %s\n",
+             RLido.id, RLido.nome, RLido.preco, RLido.quantidade, RLido.datadevalidade);
+        switch (RLido.tag){
+            case (COMIDA):
+                printf("Marca da Comida: %s", RLido.comida.marca);
+                printf("Tipo da Comida: %s", RLido.comida.tipo);
+                printf("Categoria da Comida: %s", RLido.comida.categoria);
+                break;
+            case (PAPELARIA):
+                printf("Marca da Papelaria: %s", RLido.papelaria.marca);
+                printf("Tipo da Papelaria: %s", RLido.papelaria.tipo);
+                printf("Detalhe da Papelaria: %s", RLido.papelaria.detalhe);
+                break;
+            case (LIMPEZA):
+                printf("Marca do Produto de Limpeza: %s", RLido.limpeza.marca);
+                printf("Forma do Produto de Limpeza: %s", RLido.limpeza.forma);
+                break;
+            case (ACOUGUE):
+                printf("Origem do Produto do Açougue: %s", RLido.acougue.origem);
+                printf("Corte do Produto do Açougue: %s", RLido.acougue.corte);
+                break;
+            case (HORTIFRUTI):
+                printf("Classe do Produto do Hortifruti: %s", RLido.hortifruti.classe);
+                printf("Variedade do Produto do Hortifruti: %s", RLido.hortifruti.variedade);
+                break;
+            default:
+                printf("Você não digitou algo válido!\n");
+        }
+    } else {
+        printf("Erro: Nao foi possivel ler o registro na posicao %d (EOF).\n", indice);
+    }
+>>>>>>> Stashed changes
 }
 
-void deletar(void)
+void deletar(int indice)
 {
+<<<<<<< Updated upstream
     return;
+=======
+    FILE * f = fopen("arquivo.bin", "rb");
+    if(f == NULL){
+        printf("Erro: Falha ao abrir o arquivo\n");
+    }
+    FILE * temp = fopen("temp.bin", "ab");
+    if(temp == NULL){
+        printf("Erro: Falha ao abrir o arquivo\n");
+    }
+    RegistroDoMercado R;
+    int encontrou = 0;
+    while(fread(&R,sizeof(RegistroDoMercado), 1, f) == 1){
+        if(R.id == indice){
+            encontrou = 1;
+        } else{
+            fwrite(&R, sizeof(RegistroDoMercado), 1, temp);
+        }
+    }
+    if(encontrou == 1){
+        remove("arquivo.bin");
+        rename("temp.bin", "arquivo.bin");
+        printf("Item Removido com Sucesso!\n");
+    }
+    else{
+        printf("Erro: O item nao pode ser removido(indice nao encontrado)");
+        remove("temp.bin");
+    }
+>>>>>>> Stashed changes
 }
 
-void editar(void)
+void editar(int indice)
 {
-    return;
+    RegistroDoMercado RLido;
+    FILE * f = fopen("arquivo.bin", "rb");
+    if (f == NULL){
+        printf("Erro: Falha ao abrir o arquivo\n");
+    }
+    long offset = (long)indice*sizeof(RegistroDoMercado);
+    if (fseek(f, offset, SEEK_SET) != 0) {
+        printf("Erro: Posicao fora dos limites do arquivo (fseek).\n");
+        fclose(f);
+        return;
+    }
+    if (fread(&RLido, sizeof(RegistroDoMercado), 1, f) == 1) {
+        deletar(indice);
+        registrar(indice);
+    }
+    else{
+        printf("Erro: Nao foi possivel ler o registro na posicao %d (EOF).\n", indice);
+    }
 }
