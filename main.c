@@ -5,67 +5,6 @@
 
 #define true 1
 #define false 0
-//Estoque do Mercado
-typedef enum{COMIDA, PAPELARIA, LIMPEZA, ACOUGUE, HORTIFRUTI}TipoDoProduto;
-
-typedef struct{
-    char marca[20];
-    char tipo[20]; // Arroz, feijão, macarrao
-    char categoria[20]; //seco, perecivel, nao perecivel
-}Comida;
-
-typedef struct{
-    classe[20]; //fruta, legume, folhosa, raiz
-    char variedade[20]; // banana prate, tomate italiano, ...  
-}Hortifruti;
-
-typedef struct{
-    char marca[20];
-    char tipo[20];// caneta, caderno, pincel, ...
-    char detalhe[20];// azul, 200f, 75g, ...
-}Papelaria;
-
-typedef struct{
-    char marca[20];
-    char forma[12]; // liquido, spray, po
-}Limpeza;
-
-typedef struct{
-    char origem[20];// boi, galinha, porco, peixe, ...
-    char corte[20]; //alcatra, peito, lombo, ...
-}Acougue;
-
-typedef struct{
-    int id;
-    float preco;
-    char nome[25];
-    int quantidade;
-    char datadevalidade[11];
-    TipoDoProduto tag;
-    union{
-        Comida comida;
-        Papelaria papelaria;
-        Limpeza limpeza;
-        Acougue acougue;
-        Hortifruti hortifruti;
-    }detalhes;
-}RegistroDoMercado;
-
-void limpar_buffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF) {
-        // descarta todos os caracteres até o final da linha
-    }
-}
-
-void limpar_terminal() {
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
-
 
 //Estoque do Mercado
 typedef enum{COMIDA, PAPELARIA, LIMPEZA, ACOUGUE, HORTIFRUTI}TipoDoProduto;
@@ -99,8 +38,8 @@ typedef struct{
 
 typedef struct{
     int id;
-    char nome[25];
     float preco;
+    char nome[25];
     int quantidade;
     char datadevalidade[11];
     TipoDoProduto tag;
@@ -112,9 +51,21 @@ typedef struct{
         Hortifruti hortifruti;
     };
 }RegistroDoMercado;
-<<<<<<< Updated upstream
-void registrar(int *ID){
-=======
+
+void limpar_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {
+        // descarta todos os caracteres até o final da linha
+    }
+}
+
+void limpar_terminal() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
 
 void registrar(int ID);
 void consultar(int indice);
@@ -171,18 +122,13 @@ int main()
 }
 
 void registrar(int ID){
->>>>>>> Stashed changes
     FILE * f = fopen("arquivo.bin", "ab");
     if (f == NULL){
         printf("Erro: Falha ao abrir o arquivo\n");
         return;
     }
     RegistroDoMercado R;
-<<<<<<< Updated upstream
-    R.id = (*ID)++;
-=======
     R.id = ID;
->>>>>>> Stashed changes
     get_sized_string("Nome: ", R.nome, 25);
     R.preco = get_float("Preco: ");
     limpar_buffer();
@@ -221,59 +167,10 @@ void registrar(int ID){
         printf("Erro ao escrever no arquivo");
     }
     fclose(f);
-<<<<<<< Updated upstream
-}
-void consultar(void);
-void deletar(void);
-void editar(void);
-
-int main()
-{
-    setlocale(LC_ALL,"portuguese"); 
-    int opcao;
-    int ID = 0;
-    while(true)
-    {
-        printf("Selecione um item do menu:\n\n");
-        printf("1-Registrar\n2-Consultar\n3-Deletar\n4-Editar\n5-Sair do sistema\n\n\n"); 
-        opcao = get_int("Qual função você deseja acessar? ");
-        limpar_buffer();
-        switch(opcao) 
-        {
-            case 1:
-                registrar(&ID); 
-                break;
-
-            case 2:
-                consultar(); 
-                break;
-
-            case 3:
-                deletar(); 
-                break;
-
-            case 4:
-                editar();
-                break;
-
-            case 5:
-                printf("Saindo do sistema!\n");
-                return 0;
-
-            default:
-                printf("Opção inválida!\n");
-        }
-    }
-    return 0;
-=======
->>>>>>> Stashed changes
 }
 
 void consultar(int indice)
 {
-<<<<<<< Updated upstream
-    return;
-=======
     RegistroDoMercado RLido;
     FILE * f = fopen("arquivo.bin", "rb");
     if (f == NULL){
@@ -319,14 +216,10 @@ void consultar(int indice)
     } else {
         printf("Erro: Nao foi possivel ler o registro na posicao %d (EOF).\n", indice);
     }
->>>>>>> Stashed changes
 }
 
 void deletar(int indice)
 {
-<<<<<<< Updated upstream
-    return;
-=======
     FILE * f = fopen("arquivo.bin", "rb");
     if(f == NULL){
         printf("Erro: Falha ao abrir o arquivo\n");
@@ -353,7 +246,6 @@ void deletar(int indice)
         printf("Erro: O item nao pode ser removido(indice nao encontrado)");
         remove("temp.bin");
     }
->>>>>>> Stashed changes
 }
 
 void editar(int indice)
