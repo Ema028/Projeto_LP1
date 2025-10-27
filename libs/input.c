@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#define F fflush(stdout) //limpar buffer de saída
+
 char* get_sized_string(char* text, char* string, int size)
 {
     printf("%s\n", text);
@@ -18,7 +20,7 @@ int get_int(char* text)
 {
     int x;
     printf("%s\n", text);
-    scanf("%i", &x);
+    scanf("%i", &x); F;
     return x;
 }
 
@@ -26,7 +28,7 @@ float get_float(char* text)
 {
     float x;
     printf("%s\n", text);
-    scanf("%f", &x);
+    scanf("%f", &x); F;
     return x;
 }
 
@@ -34,6 +36,6 @@ char get_char(char* text)
 {
     char x;
     printf("%s\n", text);
-    scanf("%c", &x);
+    scanf("%c", &x); F;
     return x;
 }

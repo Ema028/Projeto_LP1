@@ -1,56 +1,11 @@
-#include "libs\input.h"
+#include "libs\input.h" // biblioteca que lida com input do usuário
+#include "libs\dados.h" // declara tipos de dados usados para guardar informações do mercado
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h> 
 
 #define true 1
 #define false 0
-
-//Estoque do Mercado
-typedef enum{COMIDA, PAPELARIA, LIMPEZA, ACOUGUE, HORTIFRUTI}TipoDoProduto;
-
-typedef struct{
-    char marca[20];
-    char tipo[20]; // Arroz, feijão, macarrao
-    char categoria[20]; //seco, perecivel, nao perecivel
-}Comida;
-
-typedef struct{
-    char classe[20]; //fruta, legume, folhosa, raiz
-    char variedade[20]; // banana prate, tomate italiano, ...  
-}Hortifruti;
-
-typedef struct{
-    char marca[20];
-    char tipo[20];// caneta, caderno, pincel, ...
-    char detalhe[20];// azul, 200f, 75g, ...
-}Papelaria;
-
-typedef struct{
-    char marca[20];
-    char forma[12]; // liquido, spray, po
-}Limpeza;
-
-typedef struct{
-    char origem[20];// boi, galinha, porco, peixe, ...
-    char corte[20]; //alcatra, peito, lombo, ...
-}Acougue;
-
-typedef struct{
-    int id;
-    float preco;
-    char nome[25];
-    int quantidade;
-    char datadevalidade[11];
-    TipoDoProduto tag;
-    union{
-        Comida comida;
-        Papelaria papelaria;
-        Limpeza limpeza;
-        Acougue acougue;
-        Hortifruti hortifruti;
-    };
-}RegistroDoMercado;
 
 void limpar_buffer() {
     int c;
