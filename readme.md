@@ -20,7 +20,7 @@ A estrutura foi mantida dessa forma com o objetivo de manter a main o mais enxut
 
     /libs      -> bibliotecas locais
         arquivos.h -> funções que manipulam arquivos
-        dados.h    -> declara tipos de dados usados para guardar informações do mercado
+        dados.h    -> tipos de dados usados para guardar informações do mercado
         input.h    -> biblioteca que lida com input do usuário
     main.c     -> script principal
     Makefile   -> scripts de compilação e execução
@@ -28,13 +28,16 @@ A estrutura foi mantida dessa forma com o objetivo de manter a main o mais enxut
 
 
 #### CONSIDERAÇÕES TÉCNICAS
-O script de compilação e execução é uma Makefile, então é necessário instalar o make no sistema. Foi testada ma versão GNU Make.
+O script de compilação e execução é uma Makefile, então é necessário instalar o make no sistema. Foi testada na versão GNU Make.
 
-No ubuntu:
-    sudo apt install make
+    No ubuntu:
+    
+        sudo apt install make
 
-Para compilar: 
-    make estoque
+    Para compilar: 
+    
+        make estoque
 
-Para rodar:
-    make run
+    Para rodar: 
+    
+        make run
