@@ -3,6 +3,21 @@
 #include "input.h"
 #include "dados.h"
 
+FILE* f_id = fopen("id.txt", "wr+");
+if (f_id == NULL){
+	printf("erro ao importar dados\n");
+	return;
+}
+
+char* id = NULL;
+void free_memory(){
+	free(id);
+}
+
+get_file_string(id, f_id, free_memory);
+int ID = atoi(id);
+fclose(f_id);
+
 void limpar_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF) {
@@ -18,14 +33,29 @@ void limpar_terminal() {
 #endif
 }
 
-void registrar(int ID){
+void registrar(){
     FILE * f = fopen("arquivo.bin", "ab");
     if (f == NULL){
         printf("Erro: Falha ao abrir o arquivo\n");
         return;
     }
     RegistroDoMercado R;
-    R.id = ID;
+
+	R.id = ID++;
+	FILE* f_id = fopen("id.txt", "wr+");
+	if (f_id == NULL){
+		printf("erro ao importar dados\n");
+		return;
+	}
+
+	//tamanho arquivo id
+	fseek(f_id, 0, SEEK_END);
+	long tamanho = ftell(f_id);
+	fseek(f_id, 0, SEEK_SET);
+	//reescrever o último id existente para ser o novo
+	fwrite(&ID, sizeof(int), 1, f_id);
+	fclose(f_id);
+
     get_sized_string("Nome: ", R.nome, 25);
     R.preco = get_float("Preco: ");
     limpar_buffer();
