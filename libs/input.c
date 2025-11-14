@@ -13,12 +13,12 @@ void free_memory()
 	free(text);
 }
 
-//precisa liberar o buffer manualmente depois
-void get_file_string(char* buffer, FILE* file)
+void get_file_string(char* buffer, FILE* file, void (*func)(void))
 {
 	ssize_t read;
 	size_t size = 0;
 	read = getline(&buffer, &size, file);
+	atexit(func);
 }
 
 char* get_string()
