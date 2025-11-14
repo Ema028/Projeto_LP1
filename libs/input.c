@@ -1,8 +1,35 @@
 #include "input.h"
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #define F fflush(stdout) //limpar buffer de saída
+
+//forçar getline a usar malloc
+char* text = NULL;
+
+void free_memory()
+{
+	free(text);
+}
+
+//precisa liberar o buffer manualmente depois
+void get_file_string(char* buffer, FILE* file)
+{
+	ssize_t read;
+	size_t size = 0;
+	read = getline(&buffer, &size, file);
+}
+
+char* get_string()
+{
+	//size_t ao invés de int pra evitar overflow
+	ssize_t read;
+	size_t size = 0;
+	read = getline(&text, &size, stdin);
+	atexit(free_memory);
+	return text;
+}
 
 char* get_sized_string(char* text, char* string, int size)
 {
