@@ -51,18 +51,7 @@ void registrar(){
 	R.id = ID++;
 	printf("id do produto: %d\n", R.id);
 
-	FILE* f_id = fopen("libs/id.txt", "wb");
-
-	if (f_id == NULL)
-	{
-		printf("erro ao importar dados\n");
-		return;
-	}
-
-	//reescrever o último id existente para ser o novo
-	fseek(f_id, 0, SEEK_SET);
-	fwrite(&ID, sizeof(int), 1, f_id);
-	fclose(f_id);
+	
 
     get_sized_string("Nome: ", R.nome, 25);
     R.preco = get_float("Preco: ");
@@ -97,10 +86,25 @@ void registrar(){
             break;
         default:
             printf("Você não digitou algo válido!\n");
+            return;
     }
     if (fwrite(&R,sizeof(RegistroDoMercado), 1, f) != 1){
         printf("Erro ao escrever no arquivo");
     }
+    
+    FILE* f_id = fopen("libs/id.txt", "wb");
+
+	if (f_id == NULL)
+	{
+		printf("erro ao importar dados\n");
+		return;
+	}
+
+	//reescrever o último id existente para ser o novo
+	fseek(f_id, 0, SEEK_SET);
+	fwrite(&ID, sizeof(int), 1, f_id);
+	fclose(f_id);
+
     fclose(f);
 }
 
@@ -111,46 +115,49 @@ void consultar(int indice)
     if (f == NULL){
         printf("Erro: Falha ao abrir o arquivo\n");
     }
-
-    long offset = (long)indice*sizeof(RegistroDoMercado);
-    if (fseek(f, offset, SEEK_SET) != 0) {
-        printf("Erro: Posicao fora dos limites do arquivo (fseek).\n");
-        fclose(f);
-        return;
-    }
-    if (fread(&RLido, sizeof(RegistroDoMercado), 1, f) == 1) {
-        printf("--- Registro %d Lido ---\n", RLido.id);
-        printf("ID: %d\nNome: %s\nPreco: %.2f\nQuantidade: %d\nData de Validade: %s\n",
-             RLido.id, RLido.nome, RLido.preco, RLido.quantidade, RLido.datadevalidade);
-        switch (RLido.tag){
+    while (fread(&RLido, sizeof(RegistroDoMercado), 1, f) == 1) {
+        if(RLido.id == indice){
+            printf("--- Registro %d Lido ---\n", RLido.id);
+            printf("ID: %d\nNome: %s\nPreco: %.2f\nQuantidade: %d\nData de Validade: %s\n",
+            RLido.id, RLido.nome, RLido.preco, RLido.quantidade, RLido.datadevalidade);
+            
+            switch (RLido.tag){
             case (COMIDA):
                 printf("Marca da Comida: %s", RLido.comida.marca);
                 printf("Tipo da Comida: %s", RLido.comida.tipo);
                 printf("Categoria da Comida: %s", RLido.comida.categoria);
-                break;
+                fclose(f);
+                return;
             case (PAPELARIA):
                 printf("Marca da Papelaria: %s", RLido.papelaria.marca);
                 printf("Tipo da Papelaria: %s", RLido.papelaria.tipo);
                 printf("Detalhe da Papelaria: %s", RLido.papelaria.detalhe);
-                break;
+                fclose(f);
+                return;
             case (LIMPEZA):
                 printf("Marca do Produto de Limpeza: %s", RLido.limpeza.marca);
                 printf("Forma do Produto de Limpeza: %s", RLido.limpeza.forma);
-                break;
+                fclose(f);
+                return;
             case (ACOUGUE):
                 printf("Origem do Produto do Açougue: %s", RLido.acougue.origem);
                 printf("Corte do Produto do Açougue: %s", RLido.acougue.corte);
-                break;
+                fclose(f);
+                return;
             case (HORTIFRUTI):
                 printf("Classe do Produto do Hortifruti: %s", RLido.hortifruti.classe);
                 printf("Variedade do Produto do Hortifruti: %s", RLido.hortifruti.variedade);
-                break;
+                fclose(f);
+                return;
             default:
                 printf("Você não digitou algo válido!\n");
+            }
         }
-    } else {
-        printf("Erro: Nao foi possivel ler o registro na posicao %d (EOF).\n", indice);
     }
+    fclose(f);
+    printf("Erro: Indice não encontrado\n");
+    return;
+
 }
 
 void deletar(int indice)
@@ -181,6 +188,8 @@ void deletar(int indice)
         printf("Erro: O item nao pode ser removido(indice nao encontrado)");
         remove("temp.bin");
     }
+    fclose(temp);
+    fclose(f);
 }
 
 void editar(int indice)
