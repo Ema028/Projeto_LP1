@@ -26,7 +26,7 @@ char* get_string()
 	//size_t ao invés de int pra evitar overflow
 	ssize_t read;
 	size_t size = 0;
-	read = getline(&text, &size, stdin);
+	while ((read = getline(&text, &size, stdin)) != -1){}
 	atexit(free_memory);
 	return text;
 }
