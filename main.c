@@ -24,7 +24,6 @@ int main()
         {
             case 1:
                 registrar(ID); 
-                ID++;
                 break;
 
             case 2:
