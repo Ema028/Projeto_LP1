@@ -5,25 +5,22 @@
 #include "arquivos.h"
 
 int load_id(){
-	FILE* f_id = fopen("libs/id.txt", "a+");
+	FILE* f_id = fopen("libs/id.txt", "rb");
 	if (f_id == NULL){
 		//se não existe, cria o arquivo
-		f_id = fopen("libs/id.txt", "w+");
+		f_id = fopen("libs/id.txt", "wb");
 		if (f_id == NULL) {
 			printf("erro ao criar o arquivo\n");
 			return 0;
 		}
+        return 0;
 	}
-
-	char* id = NULL;
-	void free_memory(){
-		free(id);
-	}
-
-	get_file_string(&id, f_id, free_memory);
-	int ID = atoi(id);
-
+    
+	// Forma correta de ler o que o fwrite salvou:
+    int ID = 0;
+    fread(&ID, sizeof(int), 1, f_id);
 	fclose(f_id);
+
 	return ID;
 }
 
@@ -52,9 +49,10 @@ void registrar(){
 	
 	int ID = load_id();
 	R.id = ID++;
-	printf("id do produto: %d\n", ID);
+	printf("id do produto: %d\n", R.id);
 
-	FILE* f_id = fopen("libs/id.txt", "r+");
+	FILE* f_id = fopen("libs/id.txt", "wb");
+
 	if (f_id == NULL)
 	{
 		printf("erro ao importar dados\n");
