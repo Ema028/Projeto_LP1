@@ -5,14 +5,15 @@
 #include "arquivos.h"
 
 int load_id(){
-	FILE* f_id = fopen("libs/id.txt", "a+");
+	FILE* f_id = fopen("libs/id.txt", "r");
 	if (f_id == NULL){
 		//se não existe, cria o arquivo
-		f_id = fopen("libs/id.txt", "w+");
+		f_id = fopen("libs/id.txt", "w");
 		if (f_id == NULL) {
 			printf("erro ao criar o arquivo\n");
 			return 0;
 		}
+		return 0;
 	}
 
 	char* id = NULL;
@@ -54,16 +55,16 @@ void registrar(){
 	R.id = ID++;
 	printf("id do produto: %d\n", ID);
 
-	FILE* f_id = fopen("libs/id.txt", "r+");
+	FILE* f_id = fopen("libs/id.txt", "w");
 	if (f_id == NULL)
 	{
-		printf("erro ao importar dados\n");
+		printf("erro ao incrementar id\n");
 		return;
 	}
 
 	//reescrever o último id existente para ser o novo
 	fseek(f_id, 0, SEEK_SET);
-	fwrite(&ID, sizeof(int), 1, f_id);
+	fprintf(f_id, "%d", ID);
 	fclose(f_id);
 
     get_sized_string("Nome: ", R.nome, 25);
