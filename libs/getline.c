@@ -24,10 +24,10 @@ ssize_t getline(char** buffer, size_t* size, FILE* file) {
 			if (*size == 0){
 				new_size = 128;
 			}else{
-				new_size *= 2;
+				new_size = (*size)*2;
 			}
 
-            char* new_buffer = realloc(buffer, new_size);
+            char* new_buffer = realloc(*buffer, new_size);
             if (new_buffer == NULL){
 				return -1;
 			}
@@ -47,7 +47,7 @@ ssize_t getline(char** buffer, size_t* size, FILE* file) {
         return -1;
 	}
 
-    *buffer[index] = '\0';
+    (*buffer)[index] = '\0';
 
     return index;
 }

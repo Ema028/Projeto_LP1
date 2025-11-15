@@ -1,4 +1,5 @@
 #include "input.h"
+#include "getline.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -13,20 +14,22 @@ void free_memory()
 	free(text);
 }
 
-void get_file_string(char* buffer, FILE* file, void (*func)(void))
+ssize_t get_file_string(char** buffer, FILE* file, void (*func)(void))
 {
 	ssize_t read;
 	size_t size = 0;
-	read = getline(&buffer, &size, file);
+
+	read = getline(buffer, &size, file);
+
 	atexit(func);
+	return read;
 }
 
 char* get_string()
 {
 	//size_t ao invés de int pra evitar overflow
-	ssize_t read;
 	size_t size = 0;
-	while ((read = getline(&text, &size, stdin)) != -1){}
+	getline(&text, &size, stdin);
 	atexit(free_memory);
 	return text;
 }

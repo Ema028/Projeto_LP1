@@ -8,7 +8,7 @@
 
 void limpar_terminal();
 void limpar_buffer();
-void registrar(int ID);
+void registrar();
 void consultar(int indice);
 void deletar(int indice);
 void editar(int indice);

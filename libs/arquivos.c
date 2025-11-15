@@ -2,12 +2,17 @@
 #include <stdlib.h>
 #include "input.h"
 #include "dados.h"
+#include "arquivos.h"
 
 int load_id(){
-	FILE* f_id = fopen("id.txt", "wr+");
+	FILE* f_id = fopen("libs/id.txt", "a+");
 	if (f_id == NULL){
-		printf("erro ao importar dados\n");
-		return 0;
+		//se não existe, cria o arquivo
+		f_id = fopen("libs/id.txt", "w+");
+		if (f_id == NULL) {
+			printf("erro ao criar o arquivo\n");
+			return 0;
+		}
 	}
 
 	char* id = NULL;
@@ -15,7 +20,7 @@ int load_id(){
 		free(id);
 	}
 
-	get_file_string(id, f_id, free_memory);
+	get_file_string(&id, f_id, free_memory);
 	int ID = atoi(id);
 
 	fclose(f_id);
@@ -47,16 +52,17 @@ void registrar(){
 	
 	int ID = load_id();
 	R.id = ID++;
+	printf("id do produto: %d\n", ID);
 
-	FILE* f_id = fopen("id.txt", "wr+");
+	FILE* f_id = fopen("libs/id.txt", "r+");
 	if (f_id == NULL)
 	{
 		printf("erro ao importar dados\n");
 		return;
 	}
 
-	//tamanho arquivo id
 	//reescrever o último id existente para ser o novo
+	fseek(f_id, 0, SEEK_SET);
 	fwrite(&ID, sizeof(int), 1, f_id);
 	fclose(f_id);
 

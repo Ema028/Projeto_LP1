@@ -12,5 +12,3 @@ estoque: main.c
 run: all
 	./estoque
 
-clean:
-	rm -f $(OBJ) estoque
