@@ -105,7 +105,6 @@
   3. Percorre todos os registros
      - Usa um while (fread(...)) lendo um RegistroDoMercado por vez.
   4. Quando encontra o ID desejado
-     - Se RLido.id == indice:
      - Mostra ID, nome, preço, quantidade e data de validade.
      - Usa um switch (RLido.tag) para imprimir os campos específicos da categoria
      - Fecha o arquivo e dá return (para assim parar na primeira ocorrência).
