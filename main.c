@@ -1,6 +1,6 @@
-#include "libs\input.h" // biblioteca que lida com input do usuário
-#include "libs\dados.h" // declara tipos de dados usados para guardar informações do mercado
-#include "libs\arquivos.h" // funções que manipulam arquivos
+#include "libs/input.h" // biblioteca que lida com input do usuário
+#include "libs/dados.h" // declara tipos de dados usados para guardar informações do mercado
+#include "libs/arquivos.h" // funções que manipulam arquivos
 #include <stdio.h>
 #include <locale.h> 
 
